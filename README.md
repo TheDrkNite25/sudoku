@@ -2,7 +2,7 @@
 
 ## Overview
 
-A Sudoku game built with the Python Tkinter module. Allows you to create custom Sudoku puzzles, and then solve them. Includes some default puzzles to get you started and a solver in case you get stuck!
+A Sudoku game built with the Python Tkinter and CustomTkinter modules. Allows you to create custom Sudoku puzzles, and then solve them. Includes some default puzzles to get you started and a solver in case you get stuck!
 
 ## Features
 
