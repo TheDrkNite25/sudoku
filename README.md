@@ -16,7 +16,9 @@ A Sudoku game built with the Python Tkinter library. Allows you to create custom
 
 ## Usage Notes
 
-- To run: `python sudoku.py --puzzle [puzzle name]`
+- To run: 
+  - `pip install -r requirements.txt`
+  - `python sudoku.py --puzzle [puzzle name]`, where "[puzzle name]" is one of the available puzzles
 - To get usage help: `python sudoku.py --help` or `python sudoku.py -h`
 
 ## About the Solver
