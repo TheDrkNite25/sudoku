@@ -1,6 +1,6 @@
 import math
-from tkinter import Canvas, Frame, BOTH
-import customtkinter
+import tkinter as tk
+import customtkinter as ctk
 from solver import *
 from setup import *
 from helperFunctions import *
@@ -10,7 +10,8 @@ CELL_SIZE = 50 # width of each cell
 MARGIN = 20 # margin around the board
 WIDTH = MARGIN * 2 + CELL_SIZE * 9 
 HEIGHT = MARGIN * 2 + CELL_SIZE * 9
-BUTTONS_HEIGHT = 100
+BUTTONS_HEIGHT = 60
+BUTTON_WIDTH = 10
 
 
 class SudokuError(Exception): 
@@ -19,7 +20,7 @@ class SudokuError(Exception):
     pass
 
 
-class SudokuGUI(Frame): 
+class SudokuGUI(tk.Frame): 
     """A Tkinter GUI class that draws the Sudoku game and accepts user input"""
 
     def __init__(self, parent, game):
@@ -32,36 +33,39 @@ class SudokuGUI(Frame):
         self.__initialize_ui()
 
     def __initialize_ui(self):
-        """Initializes the UI with a blank board_canvas and buttons"""
+        """Initializes the UI with a blank canvas and buttons"""
 
-        self.parent.title("Sudoku")
+        # Create the top frame with a canvas
+        top_frame = tk.Frame(self.parent, width=WIDTH, height=HEIGHT)#, bg="#2b2b2b")
+        top_frame.pack(side="top", fill="both", expand=True)
+        self.canvas = tk.Canvas(top_frame, width=500, height=500, highlightthickness=0, bg="#2b2b2b")
+        self.canvas.pack(fill="both", expand=True)
 
-        self.window_frame = customtkinter.CTkFrame(self.parent, width=WIDTH, height=HEIGHT, border_width=2, border_color="purple")
-        #self.window_frame.pack(fill=BOTH, expand=True)
-        self.window_frame.grid(row=0, column=0)
-        self.window_frame.grid_rowconfigure(0, weight=1)
-        self.window_frame.grid_columnconfigure(0, weight=1)
+        # Create the bottom frame with three buttons
+        bottom_frame_background = tk.Frame(self.parent, width=WIDTH, height=BUTTONS_HEIGHT, bg="#2b2b2b")
+        bottom_frame_background.pack(side="bottom", fill="x")
 
-        self.board_canvas = Canvas(self.window_frame, width=WIDTH, height=HEIGHT, bg="#2b2b2b", highlightthickness=0)
-        #self.board_canvas.pack(fill=BOTH, expand=True)
-        self.board_canvas.grid(row=0, column=0)
+        bottom_frame = tk.Frame(bottom_frame_background, width=WIDTH, height=BUTTONS_HEIGHT, bg="#2b2b2b")
+        bottom_frame.pack(side="bottom", fill="x", padx=20, pady=(0, 20))
 
-        self.button_container = customtkinter.CTkFrame(self.parent, width=WIDTH, height=BUTTONS_HEIGHT, border_width=2, border_color="purple")
-        self.button_container.grid(row=1, column=0, padx=15)
-        self.button_container.grid_rowconfigure(0, weight=1)
-        self.button_container.grid_columnconfigure(0, weight=1)
+        reset_button = ctk.CTkButton(bottom_frame, text="Reset", cursor="hand2", width=BUTTON_WIDTH, command=self.__reset)
+        reset_button.pack(side="left", padx=(0, 7))
+        hint_button = ctk.CTkButton(bottom_frame, text="Hint", cursor="hand2", width=BUTTON_WIDTH, command=self.__hint)
+        hint_button.pack(side="left", padx=7)
+        solve_button = ctk.CTkButton(bottom_frame, text="Solve", cursor="hand2", width=BUTTON_WIDTH, command=self.__solve)
+        solve_button.pack(side="right", padx=(7, 0))
 
-        reset_button = customtkinter.CTkButton(self.button_container, text="Reset", cursor="hand2", command=self.__reset)
-        reset_button.grid(row=0, column=0, padx=5, pady=20)
-
-        solve_button = customtkinter.CTkButton(self.button_container, text="Solve", cursor="hand2", command=self.__solve)
-        solve_button.grid(row=0, column=1, padx=5, pady=20)
+        bottom_frame.grid_columnconfigure(0, weight=1)
+        reset_button.pack(side="left", fill="x", expand=True)
+        solve_button.pack(side="left", fill="x", expand=True)
+        hint_button.pack(side="left", fill="x", expand=True)
 
         self.__draw_grid()
         self.__draw_puzzle()
 
-        self.board_canvas.bind("<Button-1>", self.__cell_clicked) # binding for left click
-        self.board_canvas.bind("<Key>", self.__key_pressed) # binding for key press
+        # Bind left click and key press
+        self.canvas.bind("<Button-1>", self.__cell_clicked)
+        self.canvas.bind("<Key>", self.__key_pressed)
 
     def __draw_grid(self): 
         """Draws the Sudoku grid"""
@@ -75,14 +79,14 @@ class SudokuGUI(Frame):
                 y0 = MARGIN
                 x1 = MARGIN + i * CELL_SIZE
                 y1 = HEIGHT - MARGIN
-                self.board_canvas.create_line(x0, y0, x1, y1, fill=colour)
+                self.canvas.create_line(x0, y0, x1, y1, fill=colour)
 
                 # Draw horizontal lines
                 x0 = MARGIN 
                 y0 = MARGIN + i * CELL_SIZE
                 x1 = WIDTH - MARGIN
                 y1 = MARGIN + i * CELL_SIZE
-                self.board_canvas.create_line(x0, y0, x1, y1, fill=colour)
+                self.canvas.create_line(x0, y0, x1, y1, fill=colour)
 
         for i in range(10):
             colour = "#356fa9"
@@ -93,20 +97,20 @@ class SudokuGUI(Frame):
                 y0 = MARGIN
                 x1 = MARGIN + i * CELL_SIZE
                 y1 = HEIGHT - MARGIN
-                self.board_canvas.create_line(x0, y0, x1, y1, fill=colour, width=1.5)
+                self.canvas.create_line(x0, y0, x1, y1, fill=colour, width=1.5)
 
                 # Draw horizontal lines
                 x0 = MARGIN 
                 y0 = MARGIN + i * CELL_SIZE
                 x1 = WIDTH - MARGIN
                 y1 = MARGIN + i * CELL_SIZE
-                self.board_canvas.create_line(x0, y0, x1, y1, fill=colour, width=1.5)
+                self.canvas.create_line(x0, y0, x1, y1, fill=colour, width=1.5)
 
 
     def __draw_puzzle(self): 
         """Draws the current state of the Sudoku game"""
 
-        self.board_canvas.delete("numbers") # remove previous numbers
+        self.canvas.delete("numbers") # remove previous numbers
 
         for i in range(9): # iterate over rows and columns to create a cell
             for j in range(9):
@@ -119,36 +123,36 @@ class SudokuGUI(Frame):
                         colour = "#dde4ef"
                     else: 
                         colour = "orange"
-                    self.board_canvas.create_text(x, y, text=answer, tags="numbers", fill=colour) # set text of board_canvas to answer
+                    self.canvas.create_text(x, y, text=answer, tags="numbers", fill=colour) # set text of canvas to answer
 
     def __hightlight_cell(self): 
         """Highlights the cell the user clicks on with a red box"""
 
-        self.board_canvas.delete("highlight")
+        self.canvas.delete("highlight")
         if self.row >= 0 and self.col >= 0:
             x0 = MARGIN + self.col * CELL_SIZE
             y0 = MARGIN + self.row * CELL_SIZE
             x1 = MARGIN + (self.col + 1) * CELL_SIZE
             y1 = MARGIN + (self.row + 1) * CELL_SIZE
-            self.board_canvas.create_rectangle(x0, y0, x1, y1, outline="orange", width=1.5, tags="highlight")
+            self.canvas.create_rectangle(x0, y0, x1, y1, outline="orange", width=1.5, tags="highlight")
 
     def __draw_victory(self):
         """Draw the "You Win!" message"""
 
         x0 = y0 = MARGIN + CELL_SIZE * 2
         x1 = y1 = MARGIN + CELL_SIZE * 7
-        self.board_canvas.create_oval(x0, y0, x1, y1, tags="victory", fill="dark orange", outline="orange")
+        self.canvas.create_oval(x0, y0, x1, y1, tags="victory", fill="dark orange", outline="orange")
         x = y = MARGIN + 4 * CELL_SIZE + CELL_SIZE / 2
-        self.board_canvas.create_text(x, y, text="You win!", tags="victory", fill="white", font=("Arial", 32)) 
+        self.canvas.create_text(x, y, text="You win!", tags="victory", fill="white", font=("Arial", 32)) 
 
     def __draw_no_solution(self):
         """Draw the "No Solution" message"""
 
         x0 = y0 = MARGIN + CELL_SIZE * 2
         x1 = y1 = MARGIN + CELL_SIZE * 7
-        self.board_canvas.create_oval(x0, y0, x1, y1, tags="fail", fill="dark orange", outline="orange")
+        self.canvas.create_oval(x0, y0, x1, y1, tags="fail", fill="dark orange", outline="orange")
         x = y = MARGIN + 4 * CELL_SIZE + CELL_SIZE / 2
-        self.board_canvas.create_text(x, y, text="No solution!", tags="fail", fill="white", font=("Arial", 26))
+        self.canvas.create_text(x, y, text="No solution!", tags="fail", fill="white", font=("Arial", 26))
 
     def __cell_clicked(self, event):
         """Take action if a cell is clicked"""
@@ -158,7 +162,7 @@ class SudokuGUI(Frame):
 
         x, y = event.x, event.y # get x,y location of the click
         if (MARGIN < x < WIDTH - MARGIN and MARGIN < y < HEIGHT - MARGIN):
-            self.board_canvas.focus_set()
+            self.canvas.focus_set()
             row, col = int(math.floor((y - MARGIN) / CELL_SIZE)), int(math.floor((x - MARGIN) / CELL_SIZE)) # get row,col from x,y coordinates
             if (row, col) == (self.row, self.col): # deselect the cell if it's already selected
                 self.row, self.col = -1, -1
@@ -183,17 +187,17 @@ class SudokuGUI(Frame):
                 self.__draw_victory()
 
     def __reset(self):
-        """Remove any messages and reset the board"""
+        """Remove any messages and reset the puzzle"""
 
         self.game.start()
-        self.board_canvas.delete("victory")
-        self.board_canvas.delete("fail")
+        self.canvas.delete("victory")
+        self.canvas.delete("fail")
         self.__draw_puzzle()
 
     def __solve(self):
-        """Solve the Sudoku board"""
+        """Solve the Sudoku puzzle"""
 
-        solution = solve(self.game.puzzle) # call the solve algorithm
+        solution = solve(self.game.puzzle) # call the solve algorithm and get the actual solution
         if not solution: # handle the no solution case
             self.__draw_no_solution()
         else: 
@@ -202,9 +206,19 @@ class SudokuGUI(Frame):
                 self.__draw_no_solution()
             self.__draw_puzzle()
 
+    def __hint(self):
+        """Provide a hint by filling out one square of the puzzle"""
+
+        first_step = get_hint(self.game.puzzle)[0] # call the solve algorithm for only the first step
+        if not first_step: # handle the no solution case
+            self.__draw_no_solution()
+        else:
+            self.game.puzzle = first_step
+            self.__draw_puzzle()
+
 
 class SudokuBoard(object): 
-    """An Python object representation of a Sudoku board"""
+    """An Python object representation of a Sudoku puzzle"""
 
     def __init__(self, board_file):
         """SudokuBoard constructor"""
