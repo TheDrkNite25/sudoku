@@ -20,9 +20,9 @@ A Sudoku game built with the Python Tkinter library. Allows you to create custom
   - `pip install -r requirements.txt`
   - `python sudoku.py --puzzle [puzzle name]`, where "[puzzle name]" is one of the available puzzles
 - To get usage help: `python sudoku.py --help` or `python sudoku.py -h`
-- To save your own puzzle, create a plain text file in "boards" directory and name it "[YourBoardName].sudoku"
+- To save your own puzzle, create a plain text file in the "boards" directory and name it "[YourBoardName].sudoku"
   - [YourBoardName] should not contain spaces - use camelCase, snake_case, or hyphens instead
-  - The puzzle must be a 9x9 grid of integers (see the available puzzles for an example)
+  - The puzzle must be a 9x9 grid of integers (see the available puzzles for an example of a puzzle error)
   - 0 represents an empty cell
   - Next, add your board name to the "PUZZLES" list in setup.py
   - Run the program with your new board!
