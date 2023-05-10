@@ -32,7 +32,7 @@ A Sudoku game built with the Python Tkinter library. Allows you to create custom
 
 - This program uses a backtracking algorithm to solve the puzzle (depth-first search).
   - Gets the first unsolved cell (starting at the top-left)
-  - Puts the first possible integer (1-9) in that cell, and then attempts to solve the resulting puzzle
+  - Puts the first possible integer (1-9) in that cell, and then attempts to solve the resulting puzzle recursively
   - If it can't find a solution, it moves to the next possible integer and repeats
 - To visualize how the solver works, run `python sudoku.py --puzzle blank` and click "Solve". The cells will be filled out left-to-right, top-to-bottom as described above.
 - The run-time of the program can increase significantly in the worst case (for typical puzzles it is quite fast). Not much I can do about that, because making an algorithm that could solve the Sudoku in polynomial time would also solve one of the biggest open problems in computer science (P = NP)!
