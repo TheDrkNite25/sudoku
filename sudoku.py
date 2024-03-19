@@ -12,7 +12,7 @@ if __name__ == '__main__':
     # Parse arguments to read from the correct board file
     board_name = parse_arguments()
 
-    with open('boards/%s.sudoku' % board_name, 'r') as board_file:
+    with open('puzzles/%s.sudoku' % board_name, 'r') as board_file:
 
         # Create and start the game
         game = SudokuGame(board_file)
