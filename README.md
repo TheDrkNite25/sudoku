@@ -16,10 +16,22 @@ A Sudoku game built with the Python Tkinter library. Allows you to create custom
 
 ## Usage Notes
 
-- To run: 
-  - `pip install -r requirements.txt`
-  - `python sudoku.py --puzzle [puzzle name]`, where "[puzzle name]" is one of the available puzzles
-- To get usage help: `python sudoku.py --help` or `python sudoku.py -h`
+### Run
+
+```sh
+pip install -r requirements.txt
+python sudoku.py --puzzle [puzzle name]
+```
+- `[puzzle name]` is one of the available puzzles
+
+### Help
+
+```sh
+python sudoku.py -h
+```
+
+### Additional Notes
+
 - To save your own puzzle, create a plain text file in the "boards" directory and name it "[YourBoardName].sudoku"
   - [YourBoardName] should not contain spaces - use camelCase, snake_case, or hyphens instead
   - The puzzle must be a 9x9 grid of integers (see the available puzzles for an example of a puzzle error)
