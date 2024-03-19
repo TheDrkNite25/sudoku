@@ -12,7 +12,7 @@ A Sudoku game built with the Python Tkinter library. Allows you to create custom
 - Reset your work with the "Reset" button
 - If you get stuck, the computer can give you a hint with the "Hint" button
   - Finds the solution and fills in one cell of the solution for you
-- If you get REALLY stuck, computer solve the whole Sudoku for you with the "Solve" button
+- If you get REALLY stuck, the computer can solve the whole Sudoku for you with the "Solve" button
 
 ## Usage Notes
 
@@ -32,13 +32,12 @@ python sudoku.py -h
 
 ### Additional Notes
 
-- To save your own puzzle, create a plain text file in the "boards" directory and name it "[YourBoardName].sudoku"
-  - [YourBoardName] should not contain spaces - use camelCase, snake_case, or hyphens instead
-  - The puzzle must be a 9x9 grid of integers (see the available puzzles for an example of a puzzle error)
-  - 0 represents an empty cell
-  - Next, add your board name to the "PUZZLES" list in setup.py
+- To save your own puzzle, create a plain text file in the `/puzzles` directory and name it `[YourPuzzleName].sudoku`
+  - `[YourPuzzleName]` should not contain spaces - use camelCase, snake_case, or hyphens instead
+  - The puzzle must be a 9x9 grid of integers, where 0 is an empty cell (see the available puzzles for examples)
+  - Next, add your puzzle name to the `PUZZLES` list in `setup.py`
   - Run the program with your new board!
-- If you filled out a cell but want to change it, just click that cell and enter 0
+- If you entered a value in a cell but want to clear it, click the cell and enter 0
 
 ## About the Solver
 
